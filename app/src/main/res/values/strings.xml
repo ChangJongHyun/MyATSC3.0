@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="extract_xml">extract</string>
+    <string name="show_xml">Show XML</string>
+</resources>
