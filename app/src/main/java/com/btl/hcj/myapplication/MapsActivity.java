@@ -11,13 +11,13 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -27,20 +27,25 @@ import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements LocationListener {
 
+    private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
     private ClusterManager<MyItem> mClusterManager;
     private ArrayList<MyItem> mItemArray;
     private LocationManager mLocationManager;
-    private Button mExtract;
+    private Button mPress;
+    private EditText mOrigin;
+    private EditText mDest;
     private Context mContext;
     private Location mLocation;
-
+    private MyGetDirectionsData mMyGetDirectionsData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
         requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
+        requestPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+
         mContext = getApplicationContext();
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
@@ -57,10 +62,48 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
                 .findFragmentById(R.id.gmap);
         mapFragment.getMapAsync(start);
 
-        mExtract = findViewById(R.id.extract);
-        mExtract.setOnClickListener((v) -> {
-            mapFragment.getMapAsync(mapping);
+        getMyLocation();
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 16));
+            }
         });
+
+        mMyGetDirectionsData = new MyGetDirectionsData(getApplicationContext());
+        mPress = (Button) findViewById(R.id.press);
+        mOrigin = (EditText) findViewById(R.id.origin);
+        mDest = (EditText) findViewById(R.id.dest);
+        mPress.setOnClickListener((v) -> {
+            route();
+        });
+    }
+
+    private LatLng convertStringToLatLng(String s) {
+        s = s.replaceAll(" ", "");
+        String[] strings = s.split(",");
+        return new LatLng(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+    }
+
+    private void route() {
+        LatLng origin = convertStringToLatLng(mOrigin.getText().toString());
+        LatLng dest = convertStringToLatLng(mDest.getText().toString());
+
+        StringBuilder sb = new StringBuilder();
+        Object[] datas = new Object[4];
+
+        sb.append("https://maps.googleapis.com/maps/api/directions/");
+        sb.append("origin=").append(origin.latitude).append(",").append(origin.longitude);
+        sb.append("&destination=").append(dest.latitude).append(",").append(dest.longitude);
+        sb.append("&key=").append("AIzaSyAU8W1FY9oL7AVgl467lvvTNHCh1E79PVI");
+
+        mMyGetDirectionsData = new MyGetDirectionsData(getApplicationContext());
+        datas[0] = mMap;
+        datas[1] = sb.toString();
+        datas[2] = origin;
+        datas[3] = dest;
+
+        mMyGetDirectionsData.execute(datas);
     }
 
     /**
@@ -123,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         }
     };
 
-    private void requestPermission(String permission) {
+    private void requestPermission(String... permission) {
         PermissionRequester.Builder
                 requester = new PermissionRequester.Builder(this);
 
@@ -138,27 +181,28 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     private void getMyLocation() {
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-
         mLocation = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-
+        String s = mLocation.getLatitude() + ", " + mLocation.getLongitude();
+        mOrigin.setText(s);
+        Log.i(TAG, "changed");
     }
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.i(TAG, status+"");
     }
 
     @Override
-    public void onProviderEnabled(String s) {
-
+    public void onProviderEnabled(String provider) {
+        Log.i(TAG, "enable");
     }
 
     @Override
-    public void onProviderDisabled(String s) {
-
+    public void onProviderDisabled(String provider) {
+        Log.i(TAG, "Disable");
     }
 }

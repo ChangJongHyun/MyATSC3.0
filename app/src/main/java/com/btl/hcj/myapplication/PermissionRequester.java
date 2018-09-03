@@ -26,13 +26,13 @@ public class PermissionRequester {
         this.context = context;
     }
 
-    public int requests(final String permission, final int requestCode, final OnClickDenyButtonListener denyAction) {
+    public int requests(final String[] permission, final int requestCode, final OnClickDenyButtonListener denyAction) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            int permissionCheck = ContextCompat.checkSelfPermission(context, permission);
+            int permissionCheck = ContextCompat.checkSelfPermission(context, permission[0]);
 
-            if(context.shouldShowRequestPermissionRationale(permission)) {
+            if(context.shouldShowRequestPermissionRationale(permission[0])) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                 dialog.setTitle(builder.getTitle())
                         .setMessage(builder.getMsg())
@@ -40,7 +40,7 @@ public class PermissionRequester {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                context.requestPermissions(new String[]{permission}, requestCode);
+                                context.requestPermissions(permission, requestCode);
                             }
                         })
                         .setNegativeButton(builder.getNegativeButtonName(), new DialogInterface.OnClickListener() {
@@ -52,7 +52,7 @@ public class PermissionRequester {
 
                 return REQUEST_PERMISSION;
             } else {
-                context.requestPermissions(new String[] {permission}, requestCode);
+                context.requestPermissions(permission, requestCode);
                 return REQUEST_PERMISSION;
             }
         } else {
