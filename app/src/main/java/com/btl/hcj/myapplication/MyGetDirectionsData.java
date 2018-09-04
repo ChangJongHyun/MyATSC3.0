@@ -73,7 +73,7 @@ public class MyGetDirectionsData extends AsyncTask<Object, String, String> {
     @Override
     protected void onPostExecute(String s) {
         try {
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject = new JSONObject(s);
             JSONArray jsonArray = jsonObject.getJSONArray("routes").getJSONObject(0)
                     .getJSONArray("legs").getJSONObject(0).getJSONArray("steps");
 

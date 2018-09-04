@@ -48,13 +48,12 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="32dp"
         android:text="Press"
         map:layout_constraintBottom_toTopOf="@+id/gmap"
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toEndOf="@+id/dest"
         map:layout_constraintTop_toTopOf="parent"
-        map:layout_constraintVertical_bias="0.0" />
+        map:layout_constraintVertical_bias="0.476" />
 
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
@@ -63,10 +62,16 @@
         android:id="@+id/gmap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="383dp"
-        android:layout_height="341dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         map:layout_constraintBottom_toBottomOf="parent"
-        tools:context=".MapsActivity"
-        tools:layout_editor_absoluteX="0dp" />
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toBottomOf="@+id/dest"
+        tools:context=".MapsActivity" />
 
 </android.support.constraint.ConstraintLayout>

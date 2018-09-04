@@ -37,7 +37,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     private EditText mDest;
     private Context mContext;
     private Location mLocation;
-    private MyGetDirectionsData mMyGetDirectionsData;
+    private MyDirectionsData mMyDirectionsData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,17 +60,8 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.gmap);
-        mapFragment.getMapAsync(start);
-
+//        mapFragment.getMapAsync(start);
         getMyLocation();
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()), 16));
-            }
-        });
-
-        mMyGetDirectionsData = new MyGetDirectionsData(getApplicationContext());
         mPress = (Button) findViewById(R.id.press);
         mOrigin = (EditText) findViewById(R.id.origin);
         mDest = (EditText) findViewById(R.id.dest);
@@ -85,25 +76,31 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         return new LatLng(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
     }
 
+    private void geocoding(int coder) {
+        LatLng target = convertStringToLatLng(mDest.getText().toString());
+
+        Object[] datas = new Object[2];
+        datas[1] = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());  // 현재 위치
+        datas[2] = target;  // target 위치
+        datas[3] = mMap;    // 구글 맵
+
+        MyGeocoder myGeocoder = new MyGeocoder(getApplicationContext());
+        myGeocoder.execute(datas);
+    }
+
     private void route() {
         LatLng origin = convertStringToLatLng(mOrigin.getText().toString());
         LatLng dest = convertStringToLatLng(mDest.getText().toString());
-
+        Log.i(TAG, dest.toString());
         StringBuilder sb = new StringBuilder();
         Object[] datas = new Object[4];
 
-        sb.append("https://maps.googleapis.com/maps/api/directions/");
-        sb.append("origin=").append(origin.latitude).append(",").append(origin.longitude);
-        sb.append("&destination=").append(dest.latitude).append(",").append(dest.longitude);
-        sb.append("&key=").append("AIzaSyAU8W1FY9oL7AVgl467lvvTNHCh1E79PVI");
+        mMyDirectionsData = new MyDirectionsData(getApplicationContext());
+        datas[0] = origin;
+        datas[1] = dest;
+        datas[2] = mMap;
 
-        mMyGetDirectionsData = new MyGetDirectionsData(getApplicationContext());
-        datas[0] = mMap;
-        datas[1] = sb.toString();
-        datas[2] = origin;
-        datas[3] = dest;
-
-        mMyGetDirectionsData.execute(datas);
+        mMyDirectionsData.execute(datas);
     }
 
     /**
@@ -186,9 +183,10 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        String s = mLocation.getLatitude() + ", " + mLocation.getLongitude();
+        mLocation = location;
+        String s = location.getLatitude() + ", " + location.getLongitude();
         mOrigin.setText(s);
-        Log.i(TAG, "changed");
+        Log.i(TAG, "changed ");
     }
 
     @Override
