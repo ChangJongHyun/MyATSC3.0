@@ -49,7 +49,7 @@ public class PermissionRequester {
                                 denyAction.onClick(context);
                             }
                         }).create().show();
-
+//                context.requestPermissions(permission, requestCode);
                 return REQUEST_PERMISSION;
             } else {
                 context.requestPermissions(permission, requestCode);

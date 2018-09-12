@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.btl.hcj.myapplication.data.DbContract;
+import com.btl.hcj.myapplication.data.DbHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +30,7 @@ import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements LocationListener {
 
+    public static final int MY_LOCATION_REQUEST_CODE = 1111;
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
     private ClusterManager<MyItem> mClusterManager;
@@ -38,17 +42,18 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     private Context mContext;
     private Location mLocation;
     private MyDirectionsData mMyDirectionsData;
+    private DbHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
-        requestPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+        requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         mContext = getApplicationContext();
-        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
+        dbHelper = new DbHelper(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mItemArray = new ArrayList<>();
 
@@ -61,7 +66,6 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.gmap);
 //        mapFragment.getMapAsync(start);
-        getMyLocation();
         mPress = (Button) findViewById(R.id.press);
         mOrigin = (EditText) findViewById(R.id.origin);
         mDest = (EditText) findViewById(R.id.dest);
@@ -69,6 +73,12 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
             route();
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
 
     private LatLng convertStringToLatLng(String s) {
         s = s.replaceAll(" ", "");
@@ -167,18 +177,36 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         PermissionRequester.Builder
                 requester = new PermissionRequester.Builder(this);
 
-        requester.create().requests(permission, 10000,
+        requester.create().requests(permission, MY_LOCATION_REQUEST_CODE,
                 (activity) -> {
             Toast.makeText(activity, "위치 권한이 필요해요...", Toast.LENGTH_SHORT).show();
             finish();
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_LOCATION_REQUEST_CODE:
+                for (int req : grantResults) {
+                    if (req == -1) {
+                        // TODO 권한이 거절 됬을 때
+                        finish();
+                    }
+                }
+                getMyLocation();
+                break;
+        }
+    }
+
     @SuppressLint("MissingPermission")
     private void getMyLocation() {
+        boolean isGPSEnable = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        boolean isNETEnable = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        Log.i(TAG, "GPS: " + isGPSEnable);
+        Log.i(TAG, "NET: " + isNETEnable);
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-        mLocation = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
     }
 
     @Override
@@ -201,6 +229,6 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
 
     @Override
     public void onProviderDisabled(String provider) {
-        Log.i(TAG, "Disable");
+        Log.i(TAG, "Disable " + provider);
     }
 }

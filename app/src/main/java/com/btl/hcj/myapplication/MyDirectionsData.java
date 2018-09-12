@@ -85,7 +85,7 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         try {
             Log.i(TAG, "Request direction: " + sb.toString());
             URL url = new URL(sb.toString());
-            String json = MyUtils.getJsonToUrl(url);
+            String json = MyUtils.getJson(url);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

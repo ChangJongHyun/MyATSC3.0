@@ -83,7 +83,7 @@ public class MyGeocoder extends AsyncTask<Object, String, String> {
         Log.i(TAG, "request to google: " + strURL.toString());
 
         try {
-            data = MyUtils.getJsonToUrl(new URL(strURL.toString()));
+            data = MyUtils.getJson(new URL(strURL.toString()));
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

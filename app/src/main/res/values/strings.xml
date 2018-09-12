@@ -3,4 +3,19 @@
     <string name="title_activity_maps">Map</string>
     <string name="extract_xml">extract</string>
     <string name="show_xml">Show XML</string>
+
+    <!--Shelter String-->
+    <string name="shelter_description">민방위대피시설명</string>
+    <string name="shelter_class">민방위대피시설구분</string>
+    <string name="shelter_address_road">소재지도로명주소</string>
+    <string name="shelter_address_land">소재지지번주소</string>
+    <string name="shelter_latitude">위도</string>
+    <string name="shelter_longitude">경도</string>
+    <string name="shelter_size">민방위대피시설면적</string>
+    <string name="shelter_capacity">대피가능인원수</string>
+    <string name="shelter_available">개방여부</string>
+    <string name="shelter_type">평시활용유형</string>
+    <string name="shelter_office_number">관리기관전화번호</string>
+    <string name="shelter_office_name">관리기관명</string>
+    <string name="shelter_update_date">데이터기준일자</string>
 </resources>
