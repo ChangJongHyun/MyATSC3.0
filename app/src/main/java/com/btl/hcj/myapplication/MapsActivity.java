@@ -53,6 +53,10 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         mContext = getApplicationContext();
+
+        TableInfo info = new TableInfo(this);
+        info.log();
+
         dbHelper = new DbHelper(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mItemArray = new ArrayList<>();
