@@ -23,7 +23,8 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
 
     private static final String TAG = "MyDirectionsData";
 
-    private String mUrl = "https://maps.googleapis.com/maps/api/directions/json?";
+    private String mDirecUrl = "https://maps.googleapis.com/maps/api/directions/json?";
+    private String mPlaceUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
     private String mKey = MyUtils.apiKey;
     private GoogleMap mMap;
     private MyGeocoder mGeocoder;
@@ -68,17 +69,37 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         return place_id;
     }
 
+    private void searchPlace(String placeId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(mPlaceUrl);  // "https://maps.googleapis.com/maps/api/place/details/json?"
+        sb.append("placeid=").append(placeId);
+        sb.append("&language=ko");
+        sb.append("&key=").append(mKey);
+
+
+        try {
+            Log.i(TAG, "Request place detail: " + sb.toString());
+            URL url = new URL(sb.toString());
+            String json = MyUtils.getJson(url);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void route(String origin, String dest, int place) {
         StringBuilder sb = new StringBuilder();
         if (place == 1) {
-            sb.append(mUrl);
+            sb.append(mDirecUrl);
             sb.append("origin=place_id:").append(origin);
             sb.append("&destination=place_id:").append(dest);
+            sb.append("&language=ko");
             sb.append("&key=").append(mKey);
         } else {
-            sb.append(mUrl);
+            sb.append(mDirecUrl);
             sb.append("origin=").append(origin);
             sb.append("&destination=").append(dest);
+            sb.append("&language=ko");
             sb.append("&key=").append(mKey);
         }
 
@@ -108,11 +129,12 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
             String dest_place_id = getPlaceId(new JSONObject(dest_json));
             route(origin_place_id, dest_place_id, 1);
             route(origin_latlng, dest_latlng, 2);
-
+            searchPlace(origin_place_id);
+            searchPlace(dest_place_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // TODO routing algorithm
+        // TODO routing algorithm --> drawing map
 
         return null;
     }

@@ -80,7 +80,7 @@ public class MyGeocoder extends AsyncTask<Object, String, String> {
         strURL.append("&location_type=ROOFTOP");
         strURL.append("&key=").append(mKey);
 
-        Log.i(TAG, "request to google: " + strURL.toString());
+        Log.i(TAG, "Request to google direction API: " + strURL.toString());
 
         try {
             data = MyUtils.getJson(new URL(strURL.toString()));
@@ -88,7 +88,6 @@ public class MyGeocoder extends AsyncTask<Object, String, String> {
             e.printStackTrace();
         }
 
-        Log.i(TAG, "Do Google: " + data);
         return data;
     }
 

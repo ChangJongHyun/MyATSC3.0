@@ -12,7 +12,7 @@ public class MyUtils {
 
     private static HttpsURLConnection mHttpsURLConnection;
     private static InputStream mInputStream;
-    public static final String apiKey = "AIzaSyAU8W1FY9oL7AVgl467lvvTNHCh1E79PVI";
+    public static final String apiKey = "AIzaSyBHFonEYEGbbr0ZjsAWtEqKkpYrEDu5cH8";
 
     public static String getJson(URL url) {
         String json = null;

@@ -117,51 +117,6 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         mMyDirectionsData.execute(datas);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-    OnMapReadyCallback mapping = new OnMapReadyCallback() {
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            mMap = googleMap;
-            mMap.clear();
-
-            mClusterManager = new ClusterManager<>(mContext, mMap);
-
-            mMap.setOnCameraIdleListener(mClusterManager);
-            mMap.setOnMarkerClickListener(mClusterManager);
-
-            getMyLocation();
-            mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()))
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-                    .title("사용자"));
-
-            // Add a marker in Sydney and move the camera
-            LatLng university1 = new LatLng(37.631633, 127.077566);
-            LatLng elementary1 = new LatLng(37.634691, 127.072858);
-            LatLng middle1 = new LatLng(37.641074, 127.071517);
-
-            mItemArray.add(new MyItem(university1));
-            mItemArray.add(new MyItem(elementary1));
-            mItemArray.add(new MyItem(middle1));
-
-            mClusterManager.addItems(mItemArray);
-
-            mMap.addMarker(new MarkerOptions().position(university1).title("과기대"));
-            mMap.addMarker(new MarkerOptions().position(elementary1).title("연촌초"));
-            mMap.addMarker(new MarkerOptions().position(middle1).title("하계중"));
-
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(elementary1, 16));
-        }
-    };
-
     // 과기대 37.631633, 127.077566
     // 연촌초 37.634691, 127.072858
     // 하계중 37.641074, 127.071517
@@ -198,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
                         finish();
                     }
                 }
-                getMyLocation();
+//                getMyLocation();
                 break;
         }
     }
