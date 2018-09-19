@@ -3,6 +3,7 @@ package com.btl.hcj.myapplication;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,6 +38,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     private ArrayList<MyItem> mItemArray;
     private LocationManager mLocationManager;
     private Button mPress;
+    private Button mChange;
     private EditText mOrigin;
     private EditText mDest;
     private Context mContext;
@@ -71,10 +73,14 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
                 .findFragmentById(R.id.gmap);
 //        mapFragment.getMapAsync(start);
         mPress = (Button) findViewById(R.id.press);
+        mChange = (Button) findViewById(R.id.change);
         mOrigin = (EditText) findViewById(R.id.origin);
         mDest = (EditText) findViewById(R.id.dest);
         mPress.setOnClickListener((v) -> {
             route();
+        });
+        mChange.setOnClickListener((v) -> {
+            startActivity(new Intent(this, CommonGesturesActivity.class));
         });
     }
 

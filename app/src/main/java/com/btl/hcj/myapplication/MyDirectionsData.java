@@ -25,6 +25,7 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
 
     private String mDirecUrl = "https://maps.googleapis.com/maps/api/directions/json?";
     private String mPlaceUrl = "https://maps.googleapis.com/maps/api/place/details/json?";
+    private String mNearByUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
     private String mKey = MyUtils.apiKey;
     private GoogleMap mMap;
     private MyGeocoder mGeocoder;
@@ -69,6 +70,35 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         return place_id;
     }
 
+    private String[] searchNearBy(LatLng latLng) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(mNearByUrl);
+        sb.append("location=").append(latLng.latitude).append(",").append(latLng.longitude);
+        sb.append("&language=ko");
+        sb.append("&type=point_of_interest");
+        sb.append("&rankby=distance");
+        sb.append("&key=").append(mKey);
+        String[] near = new String[5];
+        try {
+            Log.i(TAG, "Request search nearby: " + sb.toString());
+            URL url = new URL(sb.toString());
+            String json = MyUtils.getJson(url);
+            JSONObject jsonObject = new JSONObject(json);
+            String status = jsonObject.getString("status");
+            if (status.equals("OK")) {
+                for (int i = 0; i < near.length; i++) {
+                    near[i] = jsonObject.getJSONArray("results").getJSONObject(i).getString("place_id");
+
+                }
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return near;
+    }
+
     private void searchPlace(String placeId) {
         StringBuilder sb = new StringBuilder();
         sb.append(mPlaceUrl);  // "https://maps.googleapis.com/maps/api/place/details/json?"
@@ -94,12 +124,14 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
             sb.append("origin=place_id:").append(origin);
             sb.append("&destination=place_id:").append(dest);
             sb.append("&language=ko");
+            sb.append("&mode=transit");
             sb.append("&key=").append(mKey);
         } else {
             sb.append(mDirecUrl);
             sb.append("origin=").append(origin);
             sb.append("&destination=").append(dest);
             sb.append("&language=ko");
+            sb.append("&mode=transit");
             sb.append("&key=").append(mKey);
         }
 
@@ -129,8 +161,15 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
             String dest_place_id = getPlaceId(new JSONObject(dest_json));
             route(origin_place_id, dest_place_id, 1);
             route(origin_latlng, dest_latlng, 2);
-            searchPlace(origin_place_id);
-            searchPlace(dest_place_id);
+//            String[] near_origin = searchNearBy(mOrigin);
+//            String[] near_dest = searchNearBy(mDest);
+//            for (String origin : near_origin)
+//                for (String dest : near_dest)
+//                    route(origin, dest, 1);
+
+
+//            searchPlace(origin_place_id);
+//            searchPlace(dest_place_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }

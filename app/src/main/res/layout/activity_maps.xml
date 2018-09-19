@@ -10,7 +10,7 @@
 
     <EditText
         android:id="@+id/origin"
-        android:layout_width="wrap_content"
+        android:layout_width="219dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="24dp"
@@ -37,9 +37,20 @@
         map:layout_constraintBottom_toTopOf="@+id/gmap"
         map:layout_constraintEnd_toStartOf="@+id/press"
         map:layout_constraintHorizontal_bias="0.5"
-        map:layout_constraintHorizontal_chainStyle="spread_inside"
+        map:layout_constraintHorizontal_chainStyle="spread"
         map:layout_constraintStart_toStartOf="parent"
         map:layout_constraintTop_toBottomOf="@+id/origin" />
+
+    <Button
+        android:id="@+id/change"
+        android:layout_width="95dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="CHANGE"
+        map:layout_constraintBottom_toTopOf="@+id/gmap"
+        map:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/press"
@@ -53,7 +64,7 @@
         map:layout_constraintEnd_toEndOf="parent"
         map:layout_constraintStart_toEndOf="@+id/dest"
         map:layout_constraintTop_toTopOf="parent"
-        map:layout_constraintVertical_bias="0.476" />
+        map:layout_constraintVertical_bias="0.246" />
 
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
