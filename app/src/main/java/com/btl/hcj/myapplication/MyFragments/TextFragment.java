@@ -30,4 +30,8 @@ public class TextFragment extends Fragment {
         textView.setTextSize(fontSize);
         textView.setText(text);
     }
+
+    public void changeTextColor(int Color) {
+        textView.setTextColor(Color);
+    }
 }

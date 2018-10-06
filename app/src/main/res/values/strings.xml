@@ -18,4 +18,16 @@
     <string name="shelter_office_number">관리기관전화번호</string>
     <string name="shelter_office_name">관리기관명</string>
     <string name="shelter_update_date">데이터기준일자</string>
+
+    <!--fragment resource-->
+    <string name="red_string">RED</string>
+    <string name="green_string">GREEN</string>
+    <string name="blue_string">BLUE</string>
+    <string name="one_string">ONE</string>
+    <string name="two_string">TWO</string>
+    <string name="three_string">THREE</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

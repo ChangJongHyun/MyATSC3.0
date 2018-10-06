@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,7 +72,7 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         return place_id;
     }
 
-    private String[] searchNearBy(LatLng latLng) {
+    private String[] getNearBy(LatLng latLng) {
         StringBuilder sb = new StringBuilder();
         sb.append(mNearByUrl);
         sb.append("location=").append(latLng.latitude).append(",").append(latLng.longitude);
@@ -99,7 +101,7 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         return near;
     }
 
-    private void searchPlace(String placeId) {
+    private void getPlace(String placeId) {
         StringBuilder sb = new StringBuilder();
         sb.append(mPlaceUrl);  // "https://maps.googleapis.com/maps/api/place/details/json?"
         sb.append("placeid=").append(placeId);
@@ -117,9 +119,10 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
 
     }
 
-    private void route(String origin, String dest, int place) {
+    private String getDirection(String origin, String dest, boolean usePlace) {
         StringBuilder sb = new StringBuilder();
-        if (place == 1) {
+        String json = null;
+        if (usePlace) {
             sb.append(mDirecUrl);
             sb.append("origin=place_id:").append(origin);
             sb.append("&destination=place_id:").append(dest);
@@ -138,10 +141,12 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         try {
             Log.i(TAG, "Request direction: " + sb.toString());
             URL url = new URL(sb.toString());
-            String json = MyUtils.getJson(url);
+            json = MyUtils.getJson(url);
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        return json;
     }
 
     @Override
@@ -154,27 +159,40 @@ public class MyDirectionsData extends AsyncTask<Object, Object, String>{
         String origin_latlng = mOrigin.latitude + "," + mOrigin.longitude;
         String dest_latlng = mDest.latitude + "," + mDest.longitude;
 
-        String origin_json = mGeocoder.doGoogle(mOrigin);
-        String dest_json = mGeocoder.doGoogle(mDest);
+//        String origin_json = mGeocoder.doGoogle(mOrigin);
+//        String dest_json = mGeocoder.doGoogle(mDest);
+        String polyline = null;
         try {
-            String origin_place_id = getPlaceId(new JSONObject(origin_json));
-            String dest_place_id = getPlaceId(new JSONObject(dest_json));
-            route(origin_place_id, dest_place_id, 1);
-            route(origin_latlng, dest_latlng, 2);
-//            String[] near_origin = searchNearBy(mOrigin);
-//            String[] near_dest = searchNearBy(mDest);
+//            String origin_place_id = getPlaceId(new JSONObject(origin_json));
+//            String dest_place_id = getPlaceId(new JSONObject(dest_json));
+//            getDirection(origin_place_id, dest_place_id, true);
+            String json1 = getDirection(origin_latlng, dest_latlng, false);
+            DirectionData directionData = new DirectionData(json1);
+            polyline = directionData.getOverviewPolyLine();
+//            String[] near_origin = getNearBy(mOrigin);
+//            String[] near_dest = getNearBy(mDest);
 //            for (String origin : near_origin)
 //                for (String dest : near_dest)
-//                    route(origin, dest, 1);
+//                    getDirection(origin, dest, 1);
 
 
-//            searchPlace(origin_place_id);
-//            searchPlace(dest_place_id);
+//            getPlace(origin_place_id);
+//            getPlace(dest_place_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // TODO routing algorithm --> drawing map
+        return polyline;
+    }
 
-        return null;
+    /*
+    * UI 업데이트 부분 작성*/
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+
+        if (mMap == null || s == null)
+            Log.i(TAG, "Google Map is null or Polyline is null");
+        else
+            mMap.addPolyline(new PolylineOptions().addAll(PolyUtil.decode(s)));
     }
 }

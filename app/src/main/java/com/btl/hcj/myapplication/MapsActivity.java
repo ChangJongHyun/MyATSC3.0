@@ -4,64 +4,84 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.btl.hcj.myapplication.data.DbContract;
-import com.btl.hcj.myapplication.data.DbHelper;
+import com.btl.hcj.myapplication.TestActivity.SceneTransitionsActivity;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class MapsActivity extends FragmentActivity implements LocationListener {
 
     public static final int MY_LOCATION_REQUEST_CODE = 1111;
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
-    private ClusterManager<MyItem> mClusterManager;
-    private ArrayList<MyItem> mItemArray;
     private LocationManager mLocationManager;
     private Button mPress;
-    private Button mChange;
-    private EditText mOrigin;
-    private EditText mDest;
-    private Context mContext;
     private Location mLocation;
+    private View mContextView;
+    private LatLng mOrigin;
+    private LatLng mDest;
     private MyDirectionsData mMyDirectionsData;
-    private DbHelper dbHelper;
+
+    private SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                autocompleteFragment.setText(place.getName());
+                mDest = place.getLatLng();
+                Log.i(TAG, "Place: " + place.getName());
+                Log.i(TAG, "Place Id: " + place.getId());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
 
         requestPermission(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
+
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        mContext = getApplicationContext();
-
-        TableInfo info = new TableInfo(this);
-        info.log();
-
-        dbHelper = new DbHelper(this);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        mItemArray = new ArrayList<>();
 
         // To hide Navigator bar
         View decorView = getWindow().getDecorView();
@@ -69,18 +89,20 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.gmap);
-//        mapFragment.getMapAsync(start);
-        mPress = (Button) findViewById(R.id.press);
-        mChange = (Button) findViewById(R.id.change);
-        mOrigin = (EditText) findViewById(R.id.origin);
-        mDest = (EditText) findViewById(R.id.dest);
-        mPress.setOnClickListener((v) -> {
-            route();
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                @SuppressLint("MissingPermission") Location a = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                LatLng l = new LatLng(a.getLatitude(), a.getLongitude());
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l, 15));
+            }
         });
-        mChange.setOnClickListener((v) -> {
-            startActivity(new Intent(this, CommonGesturesActivity.class));
+        mPress = (Button) findViewById(R.id.press);
+        getMyLocation();
+        mPress.setOnClickListener((v) -> {
+            mapFragment.getMapAsync(route);
         });
     }
 
@@ -89,36 +111,14 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         super.onStart();
     }
 
-
-    private LatLng convertStringToLatLng(String s) {
-        s = s.replaceAll(" ", "");
-        String[] strings = s.split(",");
-        return new LatLng(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
-    }
-
-    private void geocoding(int coder) {
-        LatLng target = convertStringToLatLng(mDest.getText().toString());
-
-        Object[] datas = new Object[2];
-        datas[1] = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());  // 현재 위치
-        datas[2] = target;  // target 위치
-        datas[3] = mMap;    // 구글 맵
-
-        MyGeocoder myGeocoder = new MyGeocoder(getApplicationContext());
-        myGeocoder.execute(datas);
-    }
-
-    private void route() {
-        LatLng origin = convertStringToLatLng(mOrigin.getText().toString());
-        LatLng dest = convertStringToLatLng(mDest.getText().toString());
-        Log.i(TAG, dest.toString());
-        StringBuilder sb = new StringBuilder();
-        Object[] datas = new Object[4];
-
+    private void route(GoogleMap googleMap) {
         mMyDirectionsData = new MyDirectionsData(getApplicationContext());
-        datas[0] = origin;
-        datas[1] = dest;
-        datas[2] = mMap;
+
+        Object[] datas = new Object[3];
+
+        datas[0] = mOrigin;
+        datas[1] = mDest;
+        datas[2] = googleMap;
 
         mMyDirectionsData.execute(datas);
     }
@@ -126,17 +126,25 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     // 과기대 37.631633, 127.077566
     // 연촌초 37.634691, 127.072858
     // 하계중 37.641074, 127.071517
-    OnMapReadyCallback start = new OnMapReadyCallback() {
+    OnMapReadyCallback route = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
-            LatLng sydney = new LatLng(-33.91, 151.18);
-            mMap.addMarker(new MarkerOptions()
-                    .position(sydney)
-                    .title("Hello world"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+//            LatLng disasterPosition = new LatLng(37.635493, 127.081343);
+
+            googleMap.addMarker(new MarkerOptions().position(mOrigin));
+            googleMap.addMarker(new MarkerOptions().position(mDest));
+
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(mOrigin);
+            builder.include(mDest);
+            CameraUpdate camera = CameraUpdateFactory.newLatLngBounds(builder.build(), 150);
+            googleMap.animateCamera(camera);
+
+            route(googleMap);
         }
     };
+
 
     private void requestPermission(String... permission) {
         PermissionRequester.Builder
@@ -164,27 +172,36 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         }
     }
 
+    private void showLocation(Location location) {
+        this.mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                LatLng l = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.addMarker(new MarkerOptions().position(l));
+            }
+        });
+    }
+
     @SuppressLint("MissingPermission")
-    private void getMyLocation() {
-        boolean isGPSEnable = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        boolean isNETEnable = mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        Log.i(TAG, "GPS: " + isGPSEnable);
-        Log.i(TAG, "NET: " + isNETEnable);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+    private void getMyLocation(){
+        Location a = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+        Log.i(TAG, "last known location: " + a);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        mLocation = location;
-        String s = location.getLatitude() + ", " + location.getLongitude();
-        mOrigin.setText(s);
-        Log.i(TAG, "changed ");
+        if (mOrigin == null)
+            Snackbar.make(getCurrentFocus(), "Location Detected!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        mOrigin = new LatLng(location.getLatitude(), location.getLongitude());
+        Log.i(TAG, "changed " + location.getAccuracy() + " " + location.getProvider());
+        showLocation(location);
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.i(TAG, status+"");
+        Log.i(TAG, "status changed: " + provider);
     }
 
     @Override
@@ -195,5 +212,31 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
         Log.i(TAG, "Disable " + provider);
+    }
+
+    public boolean blinkMarker(Marker marker) {
+        final Handler handler = new Handler();
+        handler.post(new Runnable() {
+            float[] blink = {12/24f, 13/24f, 14/24f, 15/24f, 16/24f, 17/24f, 18/24f, 19/24f, 20/24f, 21/24f, 22/24f, 23/24f, 24/24f};
+            int i = 0;
+            int timer;
+            @Override
+            public void run() {
+                marker.setAlpha(blink[i]);
+                i++;
+                if (i == blink.length) i = 0;
+                timer = timer + 100;
+//                if (timer < 30000)
+                handler.postDelayed(this, 1000/24);
+//                else
+//                    marker.remove();
+            }
+        });
+        return true;
+    }
+
+    private LatLng stringToLatLng(String str) {
+        String[] strs = str.split(", ");
+        return new LatLng(Double.valueOf(strs[0]), Double.valueOf(strs[1]));
     }
 }

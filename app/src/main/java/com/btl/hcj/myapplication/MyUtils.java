@@ -1,5 +1,7 @@
 package com.btl.hcj.myapplication;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,4 +65,11 @@ public class MyUtils {
 
         return json;
     }
+
+    public static LatLng convertStringToLatLng(String s) {
+        s = s.replaceAll(" ", "");
+        String[] strings = s.split(",");
+        return new LatLng(Double.parseDouble(strings[0]), Double.parseDouble(strings[1]));
+    }
+
 }
