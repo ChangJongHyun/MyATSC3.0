@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,16 +12,23 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.btl.hcj.myapplication.TestActivity.SceneTransitionsActivity;
+import com.btl.hcj.myapplication.data.MyShelterPath;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -37,7 +45,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 public class MapsActivity extends FragmentActivity implements LocationListener {
@@ -51,7 +64,18 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     private View mContextView;
     private LatLng mOrigin;
     private LatLng mDest;
-    private MyDirectionsData mMyDirectionsData;
+    private Marker mMarker;
+    private BackGroundMapAPI mBackGroundMapAPI;
+    private MyShelterPath mShelterPath;
+
+    private CoordinatorLayout mCoordinatorLayout;
+    private BottomSheetBehavior mBehavior;
+    private RecyclerView mRecyclerView;
+    private RouteAdapter mRouteAdapter;
+
+    public static final int REQUEST_DIRECTION = 1;
+    public static final int REQUEST_PLACE = 2;
+    public static final int REQUEST_NEARBY = 3;
 
     private SupportMapFragment mapFragment;
 
@@ -59,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_route_bottom_sheet);
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
 
@@ -89,20 +114,57 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.gmap);
-        mapFragment.getMapAsync(new OnMapReadyCallback() {
+        // Bottom Sheet
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
+
+        View bottomSheet = findViewById(R.id.bottom_sheet);  // null..?
+        Log.i(TAG, bottomSheet + "");
+        mBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
-                @SuppressLint("MissingPermission") Location a = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                LatLng l = new LatLng(a.getLatitude(), a.getLongitude());
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l, 15));
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
             }
         });
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        ArrayList items = new ArrayList();
+        items.add("Item 1");
+        items.add("Item 2");
+        items.add("Item 3");
+        items.add("Item 4");
+        items.add("Item 5");
+        items.add("Item 6");
+
+        mRouteAdapter = new RouteAdapter(items, (item) -> {
+            Snackbar.make(mCoordinatorLayout,item + " is selected", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+
+            mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        });
+        mRecyclerView.setAdapter(mRouteAdapter);
+
+        // TODO Adapter 등록
+
+//        mRouteAdapter = new RouteAdapter();
+
+
+        mShelterPath = new MyShelterPath(this);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.gmap);
+
         mPress = (Button) findViewById(R.id.press);
-        getMyLocation();
         mPress.setOnClickListener((v) -> {
             mapFragment.getMapAsync(route);
+            mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
     }
 
@@ -111,39 +173,50 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         super.onStart();
     }
 
-    private void route(GoogleMap googleMap) {
-        mMyDirectionsData = new MyDirectionsData(getApplicationContext());
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
+    }
 
-        Object[] datas = new Object[3];
+    // 이름바꾸기
+    private void route(GoogleMap googleMap, LatLng[] pathTable) {
+        mBackGroundMapAPI = new BackGroundMapAPI(getApplicationContext());
+
+        Object[] datas = new Object[4];
 
         datas[0] = mOrigin;
-        datas[1] = mDest;
+        datas[1] = pathTable;
         datas[2] = googleMap;
+        datas[3] = REQUEST_DIRECTION;
 
-        mMyDirectionsData.execute(datas);
+        mBackGroundMapAPI.execute(datas);
     }
 
     // 과기대 37.631633, 127.077566
-    // 연촌초 37.634691, 127.072858
-    // 하계중 37.641074, 127.071517
+    // 하계역 37.635895, 127.068199
+    // 공릉역 37.625798, 127.072886
+    // 태릉입구역 37.618579, 127.075345
     OnMapReadyCallback route = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
+
+            mShelterPath.updateJSON();
+            LatLng[] l = mShelterPath.getAllPath();
+            Log.i(TAG, Arrays.toString(l));
+
             mMap = googleMap;
-//            LatLng disasterPosition = new LatLng(37.635493, 127.081343);
 
-            googleMap.addMarker(new MarkerOptions().position(mOrigin));
-            googleMap.addMarker(new MarkerOptions().position(mDest));
+            if (mOrigin == null) {
+                Snackbar.make(getCurrentFocus(), "Location isn't detected, try again", Snackbar.LENGTH_LONG);
+            } else {
+                route(googleMap, l);
+            }
 
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(mOrigin);
-            builder.include(mDest);
-            CameraUpdate camera = CameraUpdateFactory.newLatLngBounds(builder.build(), 150);
-            googleMap.animateCamera(camera);
-
-            route(googleMap);
         }
     };
+
+
+
 
 
     private void requestPermission(String... permission) {
@@ -165,9 +238,18 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
                     if (req == -1) {
                         // TODO 권한이 거절 됬을 때
                         finish();
+
                     }
                 }
-//                getMyLocation();
+                getMyLocation();
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        @SuppressLint("MissingPermission") Location a = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                        LatLng l = new LatLng(a.getLatitude(), a.getLongitude());
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l, 15));
+                    }
+                });
                 break;
         }
     }
@@ -177,7 +259,10 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 LatLng l = new LatLng(location.getLatitude(), location.getLongitude());
-                googleMap.addMarker(new MarkerOptions().position(l));
+                if (mMarker != null) {
+                    mMarker.remove();
+                }
+                mMarker = googleMap.addMarker(new MarkerOptions().position(l).title("Current Position"));
             }
         });
     }
@@ -186,14 +271,14 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
     private void getMyLocation(){
         Location a = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
         Log.i(TAG, "last known location: " + a);
-        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0, this);
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, this);
     }
 
     @Override
     public void onLocationChanged(Location location) {
         if (mOrigin == null)
-            Snackbar.make(getCurrentFocus(), "Location Detected!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            Snackbar.make(getCurrentFocus(), "Location Detected!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
         mOrigin = new LatLng(location.getLatitude(), location.getLongitude());
         Log.i(TAG, "changed " + location.getAccuracy() + " " + location.getProvider());
         showLocation(location);
@@ -214,29 +299,4 @@ public class MapsActivity extends FragmentActivity implements LocationListener {
         Log.i(TAG, "Disable " + provider);
     }
 
-    public boolean blinkMarker(Marker marker) {
-        final Handler handler = new Handler();
-        handler.post(new Runnable() {
-            float[] blink = {12/24f, 13/24f, 14/24f, 15/24f, 16/24f, 17/24f, 18/24f, 19/24f, 20/24f, 21/24f, 22/24f, 23/24f, 24/24f};
-            int i = 0;
-            int timer;
-            @Override
-            public void run() {
-                marker.setAlpha(blink[i]);
-                i++;
-                if (i == blink.length) i = 0;
-                timer = timer + 100;
-//                if (timer < 30000)
-                handler.postDelayed(this, 1000/24);
-//                else
-//                    marker.remove();
-            }
-        });
-        return true;
-    }
-
-    private LatLng stringToLatLng(String str) {
-        String[] strs = str.split(", ");
-        return new LatLng(Double.valueOf(strs[0]), Double.valueOf(strs[1]));
-    }
 }

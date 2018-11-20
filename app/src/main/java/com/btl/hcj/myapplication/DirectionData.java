@@ -36,6 +36,15 @@ public class DirectionData {
         return overview;
     }
 
+    public String getDuration() throws JSONException {
+        String duration = null;
+        if (mStatus.equals("OK")) {
+            duration = mDirInfo.getJSONArray("routes").getJSONObject(0)
+                    .getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("value");
+        }
+        return duration;
+    }
+
     class Route {
         ArrayList<LatLng> bounds;
         ArrayList<Leg> Legs;

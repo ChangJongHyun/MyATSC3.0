@@ -43,7 +43,7 @@
         </activity>
         <activity android:name=".TestActivity.CommonGesturesActivity" />
         <activity android:name=".TestActivity.TransitionDemoActivity" />
-        <activity android:name=".TestActivity.SceneTransitionsActivity"></activity>
+        <activity android:name=".TestActivity.SceneTransitionsActivity" />
     </application>
 
 </manifest>

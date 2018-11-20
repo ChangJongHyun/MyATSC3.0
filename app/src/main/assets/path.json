@@ -1,0 +1,39 @@
+{
+  "shelter": [
+    {
+      "name": "공릉역",
+      "position": {
+        "lat": 37.625786,
+        "lng": 127.072893
+      },
+      "description": "reserved"
+    },
+    {
+      "name": "하계역",
+      "position": {
+        "lat": 37.635950,
+        "lng": 127.068206
+      },
+      "description": "reserved"
+    },
+    {
+      "name": "태릉입구역",
+      "position": {
+        "lat": 37.618327,
+        "lng": 127.075381
+      },
+      "description": "reserved"
+    }
+  ],
+  "warnings": [
+    {
+      "position": {
+        "lat": 37.63265,
+        "lng": 127.14361
+      },
+      "boundary": 30,
+      "address": ["공릉1동", "공릉2동", "하계1동"]
+    }
+  ]
+}
+

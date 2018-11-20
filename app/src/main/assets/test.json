@@ -1,0 +1,237 @@
+{
+  "geocoded_waypoints" : [
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJu_8AFNa7fDUR9QP-iVxyzjs",
+      "types" : [ "street_address" ]
+    },
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJk6JQN325fDURuT7V8Hkmdfk",
+      "types" : [ "establishment", "point_of_interest", "school" ]
+    }
+  ],
+  "routes" : [
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 37.63526299999999,
+          "lng" : 127.0765791
+        },
+        "southwest" : {
+          "lat" : 37.630702,
+          "lng" : 127.071566
+        }
+      },
+      "copyrights" : "지도 데이터 ©2018 SK telecom",
+      "legs" : [
+        {
+          "arrival_time" : {
+            "text" : "오전 12:00",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1540393257
+          },
+          "departure_time" : {
+            "text" : "오후 11:42",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1540392123
+          },
+          "distance" : {
+            "text" : "0.9 km",
+            "value" : 928
+          },
+          "duration" : {
+            "text" : "19분",
+            "value" : 1134
+          },
+          "end_address" : "대한민국 서울특별시 노원구 하계동 공릉로58길 36",
+          "end_location" : {
+            "lat" : 37.6346948,
+            "lng" : 127.072875
+          },
+          "start_address" : "대한민국 서울특별시 노원구 공릉2동 172-1",
+          "start_location" : {
+            "lat" : 37.6310626,
+            "lng" : 127.0765791
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "67 m",
+                "value" : 67
+              },
+              "duration" : {
+                "text" : "1분",
+                "value" : 68
+              },
+              "end_location" : {
+                "lat" : 37.630702,
+                "lng" : 127.075962
+              },
+              "html_instructions" : "서울과학기술대앞까지 도보",
+              "polyline" : {
+                "points" : "cytdFssrfWfAzB"
+              },
+              "start_location" : {
+                "lat" : 37.6310626,
+                "lng" : 127.0765791
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "67 m",
+                    "value" : 67
+                  },
+                  "duration" : {
+                    "text" : "1분",
+                    "value" : 68
+                  },
+                  "end_location" : {
+                    "lat" : 37.630702,
+                    "lng" : 127.075962
+                  },
+                  "polyline" : {
+                    "points" : "cytdFssrfWfAzB"
+                  },
+                  "start_location" : {
+                    "lat" : 37.6310626,
+                    "lng" : 127.0765791
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            },
+            {
+              "distance" : {
+                "text" : "0.7 km",
+                "value" : 730
+              },
+              "duration" : {
+                "text" : "3분",
+                "value" : 190
+              },
+              "end_location" : {
+                "lat" : 37.63526299999999,
+                "lng" : 127.071566
+              },
+              "html_instructions" : "버스 하계동행",
+              "polyline" : {
+                "points" : "{vtdFworfWGjA_@dFGt@GbAMj@ITQZQRUTaA`@gGpB}Bv@k@L}AVgBNe@@SFMPCZ"
+              },
+              "start_location" : {
+                "lat" : 37.630702,
+                "lng" : 127.075962
+              },
+              "transit_details" : {
+                "arrival_stop" : {
+                  "location" : {
+                    "lat" : 37.63526299999999,
+                    "lng" : 127.071566
+                  },
+                  "name" : "청구빌라.연촌초등학교"
+                },
+                "arrival_time" : {
+                  "text" : "오후 11:58",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1540393125
+                },
+                "departure_stop" : {
+                  "location" : {
+                    "lat" : 37.630702,
+                    "lng" : 127.075962
+                  },
+                  "name" : "서울과학기술대앞"
+                },
+                "departure_time" : {
+                  "text" : "오후 11:55",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1540392935
+                },
+                "headsign" : "하계동",
+                "headway" : 720,
+                "line" : {
+                  "agencies" : [
+                    {
+                      "name" : "서울특별시버스운송사업조합",
+                      "url" : "http://www.odsay.com/"
+                    }
+                  ],
+                  "color" : "#0abb0c",
+                  "name" : "서울 지선버스",
+                  "short_name" : "1227",
+                  "text_color" : "#ffffff",
+                  "vehicle" : {
+                    "icon" : "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png",
+                    "name" : "버스",
+                    "type" : "BUS"
+                  }
+                },
+                "num_stops" : 3
+              },
+              "travel_mode" : "TRANSIT"
+            },
+            {
+              "distance" : {
+                "text" : "0.1 km",
+                "value" : 131
+              },
+              "duration" : {
+                "text" : "2분",
+                "value" : 132
+              },
+              "end_location" : {
+                "lat" : 37.6346948,
+                "lng" : 127.072875
+              },
+              "html_instructions" : "대한민국 서울특별시 노원구 하계동 공릉로58길 36까지 도보",
+              "polyline" : {
+                "points" : "ksudFitqfWpBeG"
+              },
+              "start_location" : {
+                "lat" : 37.63526299999999,
+                "lng" : 127.071566
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "0.1 km",
+                    "value" : 131
+                  },
+                  "duration" : {
+                    "text" : "2분",
+                    "value" : 132
+                  },
+                  "end_location" : {
+                    "lat" : 37.6346948,
+                    "lng" : 127.072875
+                  },
+                  "polyline" : {
+                    "points" : "ksudFitqfWpBeG"
+                  },
+                  "start_location" : {
+                    "lat" : 37.63526299999999,
+                    "lng" : 127.071566
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "cytdFssrfWfAzBGjAg@zGGbAMj@[p@g@h@aA`@gGpB}Bv@k@L}AVgBNe@@SFMPCZpBeG"
+      },
+      "summary" : "",
+      "warnings" : [
+        "도보 길찾기는 베타 서비스입니다. 주의 – 이 경로에는 인도 또는 보행 경로가 누락되었을 수도 있습니다."
+      ],
+      "waypoint_order" : []
+    }
+  ],
+  "status" : "OK"
+}
