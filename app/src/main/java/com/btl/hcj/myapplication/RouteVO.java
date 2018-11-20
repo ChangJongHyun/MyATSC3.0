@@ -1,13 +1,15 @@
 package com.btl.hcj.myapplication;
 
-public class RouteVO {
-    DirectionData mDirectionData;
+import com.btl.hcj.myapplication.Serialize.Direction;
 
-    public DirectionData getmDirectionData() {
-        return mDirectionData;
+public class RouteVO {
+    Direction mDirection;
+
+    public Direction getmDirectionData() {
+        return mDirection;
     }
 
-    public void setmDirectionData(DirectionData mDirectionData) {
-        this.mDirectionData = mDirectionData;
+    public void setmDirectionData(Direction mDirection) {
+        this.mDirection = mDirection;
     }
 }

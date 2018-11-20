@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
 import com.btl.hcj.myapplication.Serialize.Direction;
+import com.btl.hcj.myapplication.data.ATSCData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -54,12 +55,12 @@ public class ExampleInstrumentedTest {
             long t1 = System.currentTimeMillis();
             Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
-            Direction d = gson.fromJson(fileData, Direction.class);
+            ATSCData d = gson.fromJson(fileData, ATSCData.class);
             String jsonD = gson.toJson(d);
-
+            Log.i("Android Test", jsonD);
             long t2 = System.currentTimeMillis();
 
-            Log.i("AndroidText", "Deserialize: " + "# of" + (i + 1) + " takes " + ((t2 - t1) / 1000.0) + " seconds");
+            Log.i("Android Test", "Deserialize: " + "# of" + (i + 1) + " takes " + ((t2 - t1) / 1000.0) + " seconds");
             is.close();
         } catch (IOException e) {
             e.printStackTrace();

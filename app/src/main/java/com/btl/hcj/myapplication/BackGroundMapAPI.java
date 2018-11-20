@@ -5,12 +5,15 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.btl.hcj.myapplication.Serialize.Direction;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.maps.android.PolyUtil;
 
 import org.json.JSONException;
@@ -34,7 +37,6 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]>{
     private GoogleMap mMap;
     private LatLng mOrigin;
     private LatLng mDest;
-    private DirectionData mDirectionData;
     private Context mContext;
     private InputStream mInputStream;
     private HttpsURLConnection mHttpsURLConnection;
@@ -85,17 +87,11 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]>{
             Log.i(TAG, "Request search nearby: " + sb.toString());
             URL url = new URL(sb.toString());
             String json = MyUtils.getJson(url);
-            JSONObject jsonObject = new JSONObject(json);
-            String status = jsonObject.getString("status");
-            if (status.equals("OK")) {
-                for (int i = 0; i < near.length; i++) {
-                    near[i] = jsonObject.getJSONArray("results").getJSONObject(i).getString("place_id");
 
-                }
-            }
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            Direction dd = gson.fromJson(json, Direction.class);
+
         } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
             e.printStackTrace();
         }
         return near;
@@ -119,9 +115,9 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]>{
 
     }
 
-    private String getDirection(String origin, String dest, boolean usePlace) {
+    private Direction getDirection(String origin, String dest, boolean usePlace) {
         StringBuilder sb = new StringBuilder();
-        String json = null;
+        Direction dd = null;
         if (usePlace) {
             sb.append(mDirecUrl);
             sb.append("origin=place_id:").append(origin);
@@ -141,18 +137,20 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]>{
         try {
             Log.i(TAG, "Request direction: " + sb.toString());
             URL url = new URL(sb.toString());
-            json = MyUtils.getJson(url);
+            String json = MyUtils.getJson(url);
+
+            Gson gson = new GsonBuilder().serializeNulls().create();
+            dd = gson.fromJson(json, Direction.class);
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        return json;
+        return dd;
     }
 
     @Override
     protected Object[] doInBackground(Object... objects) {
 
-        long t1 = System.currentTimeMillis();
         Object[] result = new Object[2];
 
         int code = (int) objects[3];
@@ -162,25 +160,17 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]>{
         String poly = null;
 
         if (code == MapsActivity.REQUEST_DIRECTION) {
-            try {
                 mOrigin = (LatLng) objects[0];
                 LatLng[] table = (LatLng[]) objects[1];
                 mMap = (GoogleMap) objects[2];
 
                 Object[] results = findShortDistanceDuration(table, mOrigin);
-                mDirectionData = (DirectionData) results[0];
-                poly = mDirectionData.getOverviewPolyLine();
+//                mDirection = (Direction) results[0];
+//                poly = mDirectionData.getOverviewPolyLine();
 
-                result[0] = poly;
+//                result[0] = poly;
+                //TODO reusult[0]에 polyline 보내주기
                 result[1] = results[1]; // path table -->
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } finally {
-                long t2 = System.currentTimeMillis();
-                Log.i(TAG, "Background method runtime: " + (t2 - t1));
-            }
-
         }
         return result; // googleMap
     }
@@ -222,17 +212,16 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]>{
     private Object[] findShortDistanceDuration(LatLng[] table, LatLng origin) {
         Long t1 = System.currentTimeMillis();
         ArrayList<Double> durations = new ArrayList<>();
-        ArrayList<DirectionData> data = new ArrayList<>();
-        String o = origin.latitude + "," + origin.longitude;
+        ArrayList<Direction> data = new ArrayList<>();
+        String o = origin.latitude + "," + origin.longitude; // origin
         for (int i = 0; i < table.length; i++) {
-            String d = table[i].latitude + "," + table[i].longitude;
-            DirectionData dd = new DirectionData(getDirection(o, d, false));
+            String d = table[i].latitude + "," + table[i].longitude; // dest
+            Direction dd = getDirection(o, d, false);
             data.add(dd);
-            try {
-                durations.add(Double.parseDouble(dd.getDuration()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+            // TODO Direction class에서 duration 가지고오기
+//            durations.add(Double.parseDouble(dd.getDuration()));
+
         }
         double min = Math.min(Math.min(durations.get(0), durations.get(1)), durations.get(2));
         int i = durations.indexOf(min);

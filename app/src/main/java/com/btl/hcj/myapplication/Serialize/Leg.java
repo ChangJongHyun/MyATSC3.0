@@ -3,15 +3,15 @@ package com.btl.hcj.myapplication.Serialize;
 import java.util.Map;
 
 class Leg {
-    private Step[] steps;
-    private ValText distance; // value-, text-
-    private ValText duration; // value-, text-
-    private ValText duration_in_traffic; // value-, text-
-    private ValTextTime arrival_time; // value-, text-, time_zone-
-    private ValTextTime departure_time; // text, value, time_zone
-    private MyLatLng start_loaction; // lat lng
-    private MyLatLng end_location;  // lat lng
-    private String start_address;
-    private String end_address;
+    public Step[] steps;
+    public ValText distance; // value-, text-
+    public ValText duration; // value-, text-
+    public ValText duration_in_traffic; // value-, text-
+    public ValTextTime arrival_time; // value-, text-, time_zone-
+    public ValTextTime departure_time; // text, value, time_zone
+    public MyLatLng start_loaction; // lat lng
+    public MyLatLng end_location;  // lat lng
+    public String start_address;
+    public String end_address;
 
 }

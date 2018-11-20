@@ -3,12 +3,12 @@ package com.btl.hcj.myapplication.Serialize;
 import java.util.Map;
 
 public class Route {
-    private Bound bounds;
-    private String copyrights;
-    private Leg[] legs;
-    private MyPolyLine overview_polyline;  // point --> encoded String
-    private String summary;
-    private String[] warnings;
-    private int[] waypoint_order;
+    public Bound bounds;
+    public String copyrights;
+    public Leg[] legs;
+    public MyPolyLine overview_polyline;  // point --> encoded String
+    public String summary;
+    public String[] warnings;
+    public int[] waypoint_order;
 
 }

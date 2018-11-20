@@ -3,10 +3,10 @@ package com.btl.hcj.myapplication.Serialize;
 import java.util.Map;
 
 public class Direction {
-    private String status;
-    private GeocodeWayPoint[] geocoded_waypoints;
-    private Route[] routes;
-    private String[] available_travel_modes;
+    public String status;
+    public GeocodeWayPoint[] geocoded_waypoints;
+    public Route[] routes;
+    public String[] available_travel_modes;
 
     public String getStatus() {
         return status;
@@ -22,6 +22,13 @@ public class Direction {
 
     public void setGeocoded_waypoints(GeocodeWayPoint[] geocoded_waypoints) {
         this.geocoded_waypoints = geocoded_waypoints;
+    }
+
+    public String[] getAllPolyline() {
+        String[] result = new String[routes.length];
+        for(int i = 0; i < routes.length; i++)
+            result[i] = routes[i].overview_polyline.points;
+        return result;
     }
 
     public Route[] getRoutes() {
