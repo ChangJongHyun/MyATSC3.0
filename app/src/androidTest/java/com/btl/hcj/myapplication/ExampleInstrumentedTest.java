@@ -6,8 +6,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.util.Log;
 
-import com.btl.hcj.myapplication.Serialize.Direction;
-import com.btl.hcj.myapplication.data.ATSCData;
+import com.btl.hcj.myapplication.data.ATSC.ATSCData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -16,8 +15,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import static org.junit.Assert.*;
 
@@ -49,7 +46,7 @@ public class ExampleInstrumentedTest {
     public void testDeserialize(InputStream is, AssetManager am, int i) {
         String fileData = null;
         try {
-            is = am.open("path.json");
+            is = am.open("com/btl/hcj/myapplication/path.json");
             fileData = MyUtils.getJson(is);
 
             long t1 = System.currentTimeMillis();

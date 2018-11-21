@@ -1,0 +1,877 @@
+{
+  "geocoded_waypoints" : [
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJ5fEVT365fDURROussnQAhUg",
+      "types" : [ "atm", "establishment", "finance", "point_of_interest" ]
+    },
+    {
+      "geocoder_status" : "OK",
+      "place_id" : "ChIJi8oBcNC7fDURV4p8172Z0Wk",
+      "types" : [
+        "establishment",
+        "point_of_interest",
+        "subway_station",
+        "transit_station"
+      ]
+    }
+  ],
+  "routes" : [
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 37.6322329,
+          "lng" : 127.0798567
+        },
+        "southwest" : {
+          "lat" : 37.625786,
+          "lng" : 127.072893
+        }
+      },
+      "copyrights" : "지도 데이터 ©2018 SK telecom",
+      "legs" : [
+        {
+          "arrival_time" : {
+            "text" : "오전 12:27",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542814059
+          },
+          "departure_time" : {
+            "text" : "오전 12:08",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542812910
+          },
+          "distance" : {
+            "text" : "1.2 km",
+            "value" : 1226
+          },
+          "duration" : {
+            "text" : "19분",
+            "value" : 1149
+          },
+          "end_address" : "대한민국 서울특별시 공릉1동 공릉",
+          "end_location" : {
+            "lat" : 37.625786,
+            "lng" : 127.072893
+          },
+          "start_address" : "대한민국 서울특별시 노원구 공릉동 172",
+          "start_location" : {
+            "lat" : 37.6322329,
+            "lng" : 127.0798567
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "0.4 km",
+                "value" : 398
+              },
+              "duration" : {
+                "text" : "7분",
+                "value" : 399
+              },
+              "end_location" : {
+                "lat" : 37.630387,
+                "lng" : 127.075977
+              },
+              "html_instructions" : "서울과학기술대앞까지 도보",
+              "polyline" : {
+                "points" : "m`udFchsfWnJfW"
+              },
+              "start_location" : {
+                "lat" : 37.6322329,
+                "lng" : 127.0798567
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "0.4 km",
+                    "value" : 398
+                  },
+                  "duration" : {
+                    "text" : "7분",
+                    "value" : 399
+                  },
+                  "end_location" : {
+                    "lat" : 37.630387,
+                    "lng" : 127.075977
+                  },
+                  "polyline" : {
+                    "points" : "m`udFchsfWnJfW"
+                  },
+                  "start_location" : {
+                    "lat" : 37.6322329,
+                    "lng" : 127.0798567
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            },
+            {
+              "distance" : {
+                "text" : "0.8 km",
+                "value" : 757
+              },
+              "duration" : {
+                "text" : "3분",
+                "value" : 198
+              },
+              "end_location" : {
+                "lat" : 37.626026,
+                "lng" : 127.073652
+              },
+              "html_instructions" : "버스 석계역행",
+              "polyline" : {
+                "points" : "}ttdF{orfWHCl@_@r@c@vFmDlA{@|AgAF@Rp@bAlDfBrFnCtJ"
+              },
+              "start_location" : {
+                "lat" : 37.630387,
+                "lng" : 127.075977
+              },
+              "transit_details" : {
+                "arrival_stop" : {
+                  "location" : {
+                    "lat" : 37.626026,
+                    "lng" : 127.073652
+                  },
+                  "name" : "공릉역"
+                },
+                "arrival_time" : {
+                  "text" : "오전 12:26",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542813987
+                },
+                "departure_stop" : {
+                  "location" : {
+                    "lat" : 37.630387,
+                    "lng" : 127.075977
+                  },
+                  "name" : "서울과학기술대앞"
+                },
+                "departure_time" : {
+                  "text" : "오전 12:23",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542813789
+                },
+                "headsign" : "석계역",
+                "headway" : 480,
+                "line" : {
+                  "agencies" : [
+                    {
+                      "name" : "서울특별시버스운송사업조합",
+                      "url" : "http://www.odsay.com/"
+                    }
+                  ],
+                  "color" : "#0abb0c",
+                  "name" : "서울 마을버스",
+                  "short_name" : "노원03",
+                  "text_color" : "#ffffff",
+                  "vehicle" : {
+                    "icon" : "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png",
+                    "name" : "버스",
+                    "type" : "BUS"
+                  }
+                },
+                "num_stops" : 3
+              },
+              "travel_mode" : "TRANSIT"
+            },
+            {
+              "distance" : {
+                "text" : "71 m",
+                "value" : 71
+              },
+              "duration" : {
+                "text" : "1분",
+                "value" : 72
+              },
+              "end_location" : {
+                "lat" : 37.625786,
+                "lng" : 127.072893
+              },
+              "html_instructions" : "대한민국 서울특별시 공릉1동 공릉까지 도보",
+              "polyline" : {
+                "points" : "uysdFiarfWn@vC"
+              },
+              "start_location" : {
+                "lat" : 37.626026,
+                "lng" : 127.073652
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "71 m",
+                    "value" : 71
+                  },
+                  "duration" : {
+                    "text" : "1분",
+                    "value" : 72
+                  },
+                  "end_location" : {
+                    "lat" : 37.625786,
+                    "lng" : 127.072893
+                  },
+                  "polyline" : {
+                    "points" : "uysdFiarfWn@vC"
+                  },
+                  "start_location" : {
+                    "lat" : 37.626026,
+                    "lng" : 127.073652
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "m`udFchsfWnJfWHC`BcAdIiF|AgAF@vA~EfBrFnCtJn@vC"
+      },
+      "summary" : "",
+      "warnings" : [
+        "도보 길찾기는 베타 서비스입니다. 주의 – 이 경로에는 인도 또는 보행 경로가 누락되었을 수도 있습니다."
+      ],
+      "waypoint_order" : []
+    },
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 37.6322329,
+          "lng" : 127.0798567
+        },
+        "southwest" : {
+          "lat" : 37.625786,
+          "lng" : 127.072893
+        }
+      },
+      "copyrights" : "지도 데이터 ©2018 SK telecom",
+      "legs" : [
+        {
+          "arrival_time" : {
+            "text" : "오전 12:32",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542814357
+          },
+          "departure_time" : {
+            "text" : "오전 12:08",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542812910
+          },
+          "distance" : {
+            "text" : "1.2 km",
+            "value" : 1156
+          },
+          "duration" : {
+            "text" : "24분",
+            "value" : 1447
+          },
+          "end_address" : "대한민국 서울특별시 공릉1동 공릉",
+          "end_location" : {
+            "lat" : 37.625786,
+            "lng" : 127.072893
+          },
+          "start_address" : "대한민국 서울특별시 노원구 공릉동 172",
+          "start_location" : {
+            "lat" : 37.6322329,
+            "lng" : 127.0798567
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "0.4 km",
+                "value" : 382
+              },
+              "duration" : {
+                "text" : "6분",
+                "value" : 383
+              },
+              "end_location" : {
+                "lat" : 37.630702,
+                "lng" : 127.075962
+              },
+              "html_instructions" : "서울과학기술대앞까지 도보",
+              "polyline" : {
+                "points" : "m`udFchsfWpHjW"
+              },
+              "start_location" : {
+                "lat" : 37.6322329,
+                "lng" : 127.0798567
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "0.4 km",
+                    "value" : 382
+                  },
+                  "duration" : {
+                    "text" : "6분",
+                    "value" : 383
+                  },
+                  "end_location" : {
+                    "lat" : 37.630702,
+                    "lng" : 127.075962
+                  },
+                  "polyline" : {
+                    "points" : "m`udFchsfWpHjW"
+                  },
+                  "start_location" : {
+                    "lat" : 37.6322329,
+                    "lng" : 127.0798567
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            },
+            {
+              "distance" : {
+                "text" : "0.2 km",
+                "value" : 191
+              },
+              "duration" : {
+                "text" : "1분",
+                "value" : 44
+              },
+              "end_location" : {
+                "lat" : 37.630983,
+                "lng" : 127.073817
+              },
+              "html_instructions" : "버스 상계4동행",
+              "polyline" : {
+                "points" : "{vtdFworfWGjA_@dFGt@GbA"
+              },
+              "start_location" : {
+                "lat" : 37.630702,
+                "lng" : 127.075962
+              },
+              "transit_details" : {
+                "arrival_stop" : {
+                  "location" : {
+                    "lat" : 37.630983,
+                    "lng" : 127.073817
+                  },
+                  "name" : "경기기계공업고등학교"
+                },
+                "arrival_time" : {
+                  "text" : "오전 12:22",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542813773
+                },
+                "departure_stop" : {
+                  "location" : {
+                    "lat" : 37.630702,
+                    "lng" : 127.075962
+                  },
+                  "name" : "서울과학기술대앞"
+                },
+                "departure_time" : {
+                  "text" : "오전 12:22",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542813729
+                },
+                "headsign" : "상계4동",
+                "headway" : 420,
+                "line" : {
+                  "agencies" : [
+                    {
+                      "name" : "서울특별시버스운송사업조합",
+                      "url" : "http://www.odsay.com/"
+                    }
+                  ],
+                  "color" : "#0abb0c",
+                  "name" : "서울 지선버스",
+                  "short_name" : "1224",
+                  "text_color" : "#ffffff",
+                  "vehicle" : {
+                    "icon" : "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png",
+                    "name" : "버스",
+                    "type" : "BUS"
+                  }
+                },
+                "num_stops" : 1
+              },
+              "travel_mode" : "TRANSIT"
+            },
+            {
+              "distance" : {
+                "text" : "0.6 km",
+                "value" : 583
+              },
+              "duration" : {
+                "text" : "10분",
+                "value" : 584
+              },
+              "end_location" : {
+                "lat" : 37.625786,
+                "lng" : 127.072893
+              },
+              "html_instructions" : "대한민국 서울특별시 공릉1동 공릉까지 도보",
+              "polyline" : {
+                "points" : "sxtdFkbrfWl_@xD"
+              },
+              "start_location" : {
+                "lat" : 37.630983,
+                "lng" : 127.073817
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "0.6 km",
+                    "value" : 583
+                  },
+                  "duration" : {
+                    "text" : "10분",
+                    "value" : 584
+                  },
+                  "end_location" : {
+                    "lat" : 37.625786,
+                    "lng" : 127.072893
+                  },
+                  "polyline" : {
+                    "points" : "sxtdFkbrfWl_@xD"
+                  },
+                  "start_location" : {
+                    "lat" : 37.630983,
+                    "lng" : 127.073817
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "m`udFchsfWpHjWGjAg@zGGbAl_@xD"
+      },
+      "summary" : "",
+      "warnings" : [
+        "도보 길찾기는 베타 서비스입니다. 주의 – 이 경로에는 인도 또는 보행 경로가 누락되었을 수도 있습니다."
+      ],
+      "waypoint_order" : []
+    },
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 37.636624,
+          "lng" : 127.0798567
+        },
+        "southwest" : {
+          "lat" : 37.625795,
+          "lng" : 127.067942
+        }
+      },
+      "copyrights" : "지도 데이터 ©2018 SK telecom",
+      "legs" : [
+        {
+          "arrival_time" : {
+            "text" : "오전 12:39",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542814740
+          },
+          "departure_time" : {
+            "text" : "오전 12:17",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542813461
+          },
+          "distance" : {
+            "text" : "2.4 km",
+            "value" : 2438
+          },
+          "duration" : {
+            "text" : "21분",
+            "value" : 1279
+          },
+          "end_address" : "대한민국 서울특별시 공릉1동 공릉",
+          "end_location" : {
+            "lat" : 37.625795,
+            "lng" : 127.072913
+          },
+          "start_address" : "대한민국 서울특별시 노원구 공릉동 172",
+          "start_location" : {
+            "lat" : 37.6322329,
+            "lng" : 127.0798567
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "1.2 km",
+                "value" : 1157
+              },
+              "duration" : {
+                "text" : "19분",
+                "value" : 1159
+              },
+              "end_location" : {
+                "lat" : 37.636624,
+                "lng" : 127.067942
+              },
+              "html_instructions" : "하계까지 도보",
+              "polyline" : {
+                "points" : "m`udFchsfWaYbeAk@jC"
+              },
+              "start_location" : {
+                "lat" : 37.6322329,
+                "lng" : 127.0798567
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "1.1 km",
+                    "value" : 1091
+                  },
+                  "duration" : {
+                    "text" : "18분",
+                    "value" : 1092
+                  },
+                  "end_location" : {
+                    "lat" : 37.63639999999999,
+                    "lng" : 127.068639
+                  },
+                  "polyline" : {
+                    "points" : "m`udFchsfWaYbeA"
+                  },
+                  "start_location" : {
+                    "lat" : 37.6322329,
+                    "lng" : 127.0798567
+                  },
+                  "travel_mode" : "WALKING"
+                },
+                {
+                  "distance" : {
+                    "text" : "66 m",
+                    "value" : 66
+                  },
+                  "duration" : {
+                    "text" : "1분",
+                    "value" : 67
+                  },
+                  "end_location" : {
+                    "lat" : 37.636624,
+                    "lng" : 127.067942
+                  },
+                  "html_instructions" : "\u003cspan class=\"location\"\u003e하계역 2번 출구\u003c/span\u003e 입구 이용",
+                  "polyline" : {
+                    "points" : "ozudF_bqfWk@jC"
+                  },
+                  "start_location" : {
+                    "lat" : 37.63639999999999,
+                    "lng" : 127.068639
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            },
+            {
+              "distance" : {
+                "text" : "1.3 km",
+                "value" : 1281
+              },
+              "duration" : {
+                "text" : "2분",
+                "value" : 120
+              },
+              "end_location" : {
+                "lat" : 37.625795,
+                "lng" : 127.072913
+              },
+              "html_instructions" : "지하철 건대입구역행",
+              "polyline" : {
+                "points" : "{{udFs}pfWvXuJbS_HtHyC`KqD@?"
+              },
+              "start_location" : {
+                "lat" : 37.636624,
+                "lng" : 127.067942
+              },
+              "transit_details" : {
+                "arrival_stop" : {
+                  "location" : {
+                    "lat" : 37.625795,
+                    "lng" : 127.072913
+                  },
+                  "name" : "공릉"
+                },
+                "arrival_time" : {
+                  "text" : "오전 12:39",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542814740
+                },
+                "departure_stop" : {
+                  "location" : {
+                    "lat" : 37.636624,
+                    "lng" : 127.067942
+                  },
+                  "name" : "하계"
+                },
+                "departure_time" : {
+                  "text" : "오전 12:37",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542814620
+                },
+                "headsign" : "건대입구역",
+                "line" : {
+                  "agencies" : [
+                    {
+                      "name" : "서울도시철도공사",
+                      "url" : "http://www.odsay.com/"
+                    }
+                  ],
+                  "color" : "#69870e",
+                  "name" : "서울지하철",
+                  "short_name" : "7호선",
+                  "text_color" : "#ffffff",
+                  "vehicle" : {
+                    "icon" : "//maps.gstatic.com/mapfiles/transit/iw2/6/subway2.png",
+                    "name" : "지하철",
+                    "type" : "SUBWAY"
+                  }
+                },
+                "num_stops" : 1
+              },
+              "travel_mode" : "TRANSIT"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "m`udFchsfWaYbeAk@jCzl@uStHyC`KqD@?"
+      },
+      "summary" : "",
+      "warnings" : [
+        "도보 길찾기는 베타 서비스입니다. 주의 – 이 경로에는 인도 또는 보행 경로가 누락되었을 수도 있습니다."
+      ],
+      "waypoint_order" : []
+    },
+    {
+      "bounds" : {
+        "northeast" : {
+          "lat" : 37.6322329,
+          "lng" : 127.0798567
+        },
+        "southwest" : {
+          "lat" : 37.625786,
+          "lng" : 127.071775
+        }
+      },
+      "copyrights" : "지도 데이터 ©2018 SK telecom",
+      "legs" : [
+        {
+          "arrival_time" : {
+            "text" : "오전 12:49",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542815341
+          },
+          "departure_time" : {
+            "text" : "오전 12:18",
+            "time_zone" : "Asia/Seoul",
+            "value" : 1542813510
+          },
+          "distance" : {
+            "text" : "1.4 km",
+            "value" : 1420
+          },
+          "duration" : {
+            "text" : "31분",
+            "value" : 1831
+          },
+          "end_address" : "대한민국 서울특별시 공릉1동 공릉",
+          "end_location" : {
+            "lat" : 37.625786,
+            "lng" : 127.072893
+          },
+          "start_address" : "대한민국 서울특별시 노원구 공릉동 172",
+          "start_location" : {
+            "lat" : 37.6322329,
+            "lng" : 127.0798567
+          },
+          "steps" : [
+            {
+              "distance" : {
+                "text" : "0.9 km",
+                "value" : 884
+              },
+              "duration" : {
+                "text" : "15분",
+                "value" : 885
+              },
+              "end_location" : {
+                "lat" : 37.626658,
+                "lng" : 127.072693
+              },
+              "html_instructions" : "공릉역1번출구까지 도보",
+              "polyline" : {
+                "points" : "m`udFchsfWxa@xk@"
+              },
+              "start_location" : {
+                "lat" : 37.6322329,
+                "lng" : 127.0798567
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "0.9 km",
+                    "value" : 884
+                  },
+                  "duration" : {
+                    "text" : "15분",
+                    "value" : 885
+                  },
+                  "end_location" : {
+                    "lat" : 37.626658,
+                    "lng" : 127.072693
+                  },
+                  "polyline" : {
+                    "points" : "m`udFchsfWxa@xk@"
+                  },
+                  "start_location" : {
+                    "lat" : 37.6322329,
+                    "lng" : 127.0798567
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            },
+            {
+              "distance" : {
+                "text" : "0.2 km",
+                "value" : 219
+              },
+              "duration" : {
+                "text" : "1분",
+                "value" : 28
+              },
+              "end_location" : {
+                "lat" : 37.628498,
+                "lng" : 127.071775
+              },
+              "html_instructions" : "버스 상계주공7단지행",
+              "polyline" : {
+                "points" : "s}sdFi{qfWoJvD"
+              },
+              "start_location" : {
+                "lat" : 37.626658,
+                "lng" : 127.072693
+              },
+              "transit_details" : {
+                "arrival_stop" : {
+                  "location" : {
+                    "lat" : 37.628498,
+                    "lng" : 127.071775
+                  },
+                  "name" : "서울과학기술대입구"
+                },
+                "arrival_time" : {
+                  "text" : "오전 12:43",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542815023
+                },
+                "departure_stop" : {
+                  "location" : {
+                    "lat" : 37.626658,
+                    "lng" : 127.072693
+                  },
+                  "name" : "공릉역1번출구"
+                },
+                "departure_time" : {
+                  "text" : "오전 12:43",
+                  "time_zone" : "Asia/Seoul",
+                  "value" : 1542814995
+                },
+                "headsign" : "상계주공7단지",
+                "headway" : 600,
+                "line" : {
+                  "agencies" : [
+                    {
+                      "name" : "서울특별시버스운송사업조합",
+                      "url" : "http://www.odsay.com/"
+                    }
+                  ],
+                  "color" : "#304ffe",
+                  "name" : "서울 간선버스",
+                  "short_name" : "146",
+                  "text_color" : "#ffffff",
+                  "vehicle" : {
+                    "icon" : "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png",
+                    "name" : "버스",
+                    "type" : "BUS"
+                  }
+                },
+                "num_stops" : 1
+              },
+              "travel_mode" : "TRANSIT"
+            },
+            {
+              "distance" : {
+                "text" : "0.3 km",
+                "value" : 317
+              },
+              "duration" : {
+                "text" : "5분",
+                "value" : 318
+              },
+              "end_location" : {
+                "lat" : 37.625786,
+                "lng" : 127.072893
+              },
+              "html_instructions" : "대한민국 서울특별시 공릉1동 공릉까지 도보",
+              "polyline" : {
+                "points" : "citdFquqfW|O_F"
+              },
+              "start_location" : {
+                "lat" : 37.628498,
+                "lng" : 127.071775
+              },
+              "steps" : [
+                {
+                  "distance" : {
+                    "text" : "0.3 km",
+                    "value" : 317
+                  },
+                  "duration" : {
+                    "text" : "5분",
+                    "value" : 318
+                  },
+                  "end_location" : {
+                    "lat" : 37.625786,
+                    "lng" : 127.072893
+                  },
+                  "polyline" : {
+                    "points" : "citdFquqfW|O_F"
+                  },
+                  "start_location" : {
+                    "lat" : 37.628498,
+                    "lng" : 127.071775
+                  },
+                  "travel_mode" : "WALKING"
+                }
+              ],
+              "travel_mode" : "WALKING"
+            }
+          ],
+          "traffic_speed_entry" : [],
+          "via_waypoint" : []
+        }
+      ],
+      "overview_polyline" : {
+        "points" : "m`udFchsfWxa@xk@oJvD|O_F"
+      },
+      "summary" : "",
+      "warnings" : [
+        "도보 길찾기는 베타 서비스입니다. 주의 – 이 경로에는 인도 또는 보행 경로가 누락되었을 수도 있습니다."
+      ],
+      "waypoint_order" : []
+    }
+  ],
+  "status" : "OK"
+}

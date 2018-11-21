@@ -1,6 +1,7 @@
 package com.btl.hcj.myapplication;
 
-import com.btl.hcj.myapplication.Serialize.Direction;
+import com.btl.hcj.myapplication.data.ATSC.ATSCData;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -9,7 +10,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -26,9 +26,14 @@ public class ExampleUnitTest {
         long t1 = System.currentTimeMillis();
         Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
 
-        String fileData = new String(Files.readAllBytes(Paths.get("./test.json")));
-        Direction d = gson.fromJson(fileData, Direction.class);
+        String fileData = new String(Files.readAllBytes(Paths.get("./path.json")));
+        ATSCData d = gson.fromJson(fileData, ATSCData.class);
         String jsonD = gson.toJson(d);
+
+        LatLng[] table = d.getPathTable();
+
+        for(int i = 0; i < table.length; i++)
+            System.out.println(table[i]);
 
         long t2 = System.currentTimeMillis();
         System.out.println((t2 - t1) / 1000.0 + " seconds");
