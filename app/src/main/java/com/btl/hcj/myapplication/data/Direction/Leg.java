@@ -1,6 +1,6 @@
 package com.btl.hcj.myapplication.data.Direction;
 
-class Leg {
+public class Leg {
     public Step[] steps;
     public ValText distance; // value-, text-
     public ValText duration; // value-, text-

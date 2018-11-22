@@ -35,8 +35,15 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
     @Override
     public void onBindViewHolder(@NonNull RouteHolder holder, int position) {
         Route data = mItems.get(position);
-        String s = data.getTotalDuration() + "";
-        holder.nameView.setText(s);
+        String duration = data.getStringDuration();
+        String arrival = data.getStringArrival();
+        String departure = data.getStringDeparture();
+        String distance = data.getStringDistance();
+
+        holder.distanceView.setText(distance);
+        holder.durationView.setText(duration);
+        holder.arrivalView.setText(arrival);
+        holder.departureView.setText(departure);
         holder.route = data;
     }
 
@@ -47,14 +54,18 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder>
     }
 
     class RouteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView nameView;
         TextView durationView;
+        TextView distanceView;
+        TextView arrivalView;
+        TextView departureView;
         ImageView imageView;
         Route route;
 
         RouteHolder(View root) {
             super(root);
-            nameView = root.findViewById(R.id.name);
+            distanceView = root.findViewById(R.id.distance);
+            arrivalView = root.findViewById(R.id.arrival);
+            departureView = root.findViewById(R.id.departure);
             durationView = root.findViewById(R.id.duration);
             imageView = root.findViewById(R.id.image_icon);
             root.setOnClickListener(this);

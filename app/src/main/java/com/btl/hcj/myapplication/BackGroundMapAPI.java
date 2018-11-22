@@ -160,7 +160,7 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
             b.include(mDest);
             map.animateCamera(CameraUpdateFactory.newLatLngBounds(b.build(), 150));
             items = new ArrayList<>(Arrays.asList(atsc.routes));
-            sendItem(items, map);
+            sendItem(items, map, p);
         }
     }
 
@@ -218,10 +218,10 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
     }
 
     public interface ItemListener {
-        void getItem(List<Route> item, GoogleMap googleMap);
+        void getItem(List<Route> item, GoogleMap googleMap, Polyline p);
     }
 
-    public void sendItem(ArrayList<Route> item, GoogleMap googleMap) {
-        MapsActivity.getItem(item, googleMap);
+    public void sendItem(ArrayList<Route> item, GoogleMap googleMap, Polyline p) {
+        MapsActivity.getItem(item, googleMap, p);
     }
 }

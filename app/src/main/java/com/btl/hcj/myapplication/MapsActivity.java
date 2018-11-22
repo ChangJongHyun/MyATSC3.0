@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.btl.hcj.myapplication.BottomSheet.RouteAdapter;
 import com.btl.hcj.myapplication.BottomSheet.RouteVO;
+import com.btl.hcj.myapplication.data.Direction.Leg;
 import com.btl.hcj.myapplication.data.Direction.Route;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PointOfInterest;
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.PolyUtil;
 
@@ -60,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     private RecyclerView mRecyclerView;
     private RouteAdapter mRouteAdapter;
     private TextView mBottomText;
+
+    private Polyline p;
 
     public static ArrayList<Route> items;
 
@@ -238,8 +243,8 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
         Log.i(TAG, "Disable " + provider);
     }
 
-    public static void getItem(ArrayList<Route> item, GoogleMap googleMap) {
-        mItemCallback.getItem(item, googleMap);
+    public static void getItem(ArrayList<Route> item, GoogleMap googleMap, Polyline p) {
+        mItemCallback.getItem(item, googleMap, p);
     }
 
     public static void setItemCallback(BackGroundMapAPI.ItemListener mItemCallback) {
@@ -247,19 +252,29 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     }
 
     @Override
-    public void getItem(List<Route> item, GoogleMap map) {
+    public void getItem(List<Route> item, GoogleMap map, Polyline p) {
         mRouteAdapter = new RouteAdapter(item,this);
         mRecyclerView.setAdapter(mRouteAdapter);
         mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        this.p = p;
     }
 
 
     @Override
     public void onItemClick(Route route) {
         Random rnd = new Random();
+
+        if (p != null)
+            p.remove();
         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        mMap.addPolyline(new PolylineOptions().color(color)
+        p = mMap.addPolyline(new PolylineOptions().color(color).clickable(true)
                 .addAll(PolyUtil.decode(route.overview_polyline.points)));
+
+        mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(Polyline polyline) {
+            }
+        });
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 }
