@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.btl.hcj.myapplication.BottomSheet.RouteAdapter;
+import com.btl.hcj.myapplication.BottomSheet.RouteVO;
+import com.btl.hcj.myapplication.data.ATSC.Shelter;
 import com.btl.hcj.myapplication.data.Direction.Direction;
 import com.btl.hcj.myapplication.data.ATSC.ATSCData;
 import com.btl.hcj.myapplication.data.Direction.Route;
@@ -30,9 +32,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
 
@@ -116,20 +121,16 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
 
         Object[] result = new Object[objects.length];
 
-        int code = (int) objects[2];
+        int code = (int) objects[1];
 
         if (code == MapsActivity.REQUEST_DIRECTION) {
 
             LatLng origin = (LatLng) objects[0];
 
-            LatLng[] table = getPathTable();
-            Direction results = findShortDistanceDuration(table, origin);
+            List<RouteVO> results = findShortDistanceDuration(getPathTable(), origin);
 
             result[0] = results;
-            result[1] = objects[1]; // google map
-            result[2] = origin;
-            result[3] = objects[3]; // behavior
-            result[4] = objects[4]; // recyclerview
+            result[1] = origin;
 
         }
         return result;
@@ -139,28 +140,16 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
     protected void onPostExecute(Object[] s) {
         super.onPostExecute(s);
 
-        Direction atsc = (Direction) s[0];
-        GoogleMap gmap = (GoogleMap) s[1];
-        LatLng origin = (LatLng) s[2];
-        RecyclerView recyclerView = (RecyclerView) s[3];
-        RouteAdapter routeAdapter = (RouteAdapter) s[4];
+        List<RouteVO> info = (List<RouteVO>) s[0];
 
-        map = gmap;
-        map.clear();
+        if (info != null) {
 
-        if (atsc != null) {
-            String[] polylines = atsc.getAllPolyline();
-            Polyline p = map.addPolyline(new PolylineOptions().addAll(PolyUtil.decode(polylines[0])));
-
-            map.addMarker(new MarkerOptions().position(origin).title("Origin"));
-            map.addMarker(new MarkerOptions().position(mDest).title("Destination"));
-
-            LatLngBounds.Builder b = new LatLngBounds.Builder();
-            b.include(origin);
-            b.include(mDest);
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(b.build(), 150));
-            items = new ArrayList<>(Arrays.asList(atsc.routes));
-            sendItem(items, map, p);
+//            LatLngBounds.Builder b = new LatLngBounds.Builder();
+//            b.include(origin);
+//            b.include(mDest);
+//            map.animateCamera(CameraUpdateFactory.newLatLngBounds(b.build(), 150));
+//            items = new ArrayList<>(Arrays.asList(atsc.routes));
+            sendItem(info);
         }
     }
 
@@ -181,16 +170,16 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
         return length.indexOf(min);
     }
 
-    public LatLng[] getPathTable() {
+    public Shelter[] getPathTable() {
         AssetManager am = mContext.getAssets();
-        LatLng[] table = null;
+        Shelter[] table = null;
         try {
 
             String json = MyUtils.getJson(am.open("path.json"));
             Gson gson = new GsonBuilder().serializeNulls().create();
 
             ATSCData d = gson.fromJson(json, ATSCData.class);
-            table = d.getPathTable();
+            table = d.getShelter();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -198,30 +187,28 @@ public class BackGroundMapAPI extends AsyncTask<Object, Object, Object[]> {
         return table;
     }
 
-    private Direction findShortDistanceDuration(LatLng[] table, LatLng origin) {
+    private List<RouteVO> findShortDistanceDuration(Shelter[] table, LatLng origin) {
 
-        List<Direction> durationList = new LinkedList<>();
+        List<RouteVO> routeList = new LinkedList<>();
 
         String o = origin.latitude + "," + origin.longitude; // origin
-        for (int i = 0; i < table.length; i++) {
-            String d = table[i].latitude + "," + table[i].longitude; // dest
-            Direction dd = getDirection(o, d, false);
-            durationList.add(dd);
+        for (Shelter s : table) {
+            LatLng l = s.getLatLng();
+            String d = l.latitude + "," + l.longitude; // dest
+            Direction dd = getDirection(o, d, true);
+            routeList.add(new RouteVO(s, dd));
         }
 
-        // TODO direction이 없을 경우 에러처리
+        Collections.sort(routeList, (d1, d2) -> (int) (d1.getFirstDuraion() - d2.getFirstDuraion()));
 
-        Direction min = Collections.min(durationList, (d1, d2) -> (int) (d1.getDuration() - d2.getDuration()));
-        mDest = table[durationList.indexOf(min)];
-        String dest = mDest.latitude + "," + mDest.longitude;
-        return getDirection(o, dest, true);
+        return routeList;
     }
 
     public interface ItemListener {
-        void getItem(List<Route> item, GoogleMap googleMap, Polyline p);
+        void getItem(List<RouteVO> item);
     }
 
-    public void sendItem(ArrayList<Route> item, GoogleMap googleMap, Polyline p) {
-        MapsActivity.getItem(item, googleMap, p);
+    public void sendItem(List<RouteVO> item) {
+        MapsActivity.receiveItem(item);
     }
 }

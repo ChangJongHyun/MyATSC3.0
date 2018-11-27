@@ -22,6 +22,10 @@ public class Direction {
         return result;
     }
 
+    public String getOverivewPolyline() {
+        return this.routes[0].overview_polyline.points;
+    }
+
     public double getDuration() {
         double result = 0;
         for (int i = 0; i < routes.length; i++)

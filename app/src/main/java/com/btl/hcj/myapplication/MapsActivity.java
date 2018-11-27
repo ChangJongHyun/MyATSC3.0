@@ -3,7 +3,10 @@ package com.btl.hcj.myapplication;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,6 +16,7 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.btl.hcj.myapplication.BottomSheet.RouteAdapter;
+import com.btl.hcj.myapplication.BottomSheet.RouteHolder;
 import com.btl.hcj.myapplication.BottomSheet.RouteVO;
 import com.btl.hcj.myapplication.data.Direction.Leg;
 import com.btl.hcj.myapplication.data.Direction.Route;
@@ -33,6 +38,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -55,7 +61,10 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     private View mContextView;
     private LatLng mOrigin;
     private LatLng mDest;
-    private Marker mMarker;
+    private LatLng mDisaster;
+    private Marker mOriginMarker;
+    private Marker mDestMarker;
+    private LatLng mDisasterMarker;
     private BackGroundMapAPI mBackGroundMapAPI;
 
     private CoordinatorLayout mCoordinatorLayout;
@@ -134,12 +143,29 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
 
         setItemCallback(this);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mapFragment.getMapAsync(route);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+
+        builder.setMessage("재난이 발생 했습니다. 재난 대피소 정보를 받아오시겠습니까? ");
+        builder.setTitle("재난 발생 알림");
+
+        AlertDialog dialog = builder.create();
+
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.gmap);
 
         mPress = findViewById(R.id.press);
         mPress.setOnClickListener((v) -> {
-            mapFragment.getMapAsync(route);
+            dialog.show();
         });
     }
 
@@ -148,18 +174,20 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
         public void onMapReady(GoogleMap googleMap) {
             mMap = googleMap;
 
+//            mDisaster = new LatLng(37.639630, 127.080094); // 공릉 부근
+            mDisaster = new LatLng(36.381342, 127.373179); // ETRI 부근
+
+            mMap.addMarker(new MarkerOptions().position(mDisaster).title("재난 발생"));
+            mMap.addCircle(new CircleOptions().center(mDisaster).radius(450).strokeColor(Color.RED));
             if (mOrigin == null) {
                 Snackbar.make(getCurrentFocus(), "Location isn't detected, try again", Snackbar.LENGTH_LONG);
             } else {
                 mBackGroundMapAPI = new BackGroundMapAPI(getApplicationContext());
 
-                Object[] datas = new Object[6];
+                Object[] datas = new Object[2];
 
                 datas[0] = mOrigin;
-                datas[1] = googleMap;
-                datas[2] = REQUEST_DIRECTION;
-                datas[3] = mRecyclerView;
-                datas[4] = mRouteAdapter;
+                datas[1] = REQUEST_DIRECTION;
 
                 mBackGroundMapAPI.execute(datas);
             }
@@ -193,22 +221,14 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
                         @SuppressLint("MissingPermission") Location a = mLocationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
-                        LatLng l = new LatLng(a.getLatitude(), a.getLongitude());
+//                        LatLng l = new LatLng(a.getLatitude(), a.getLongitude()); // 공릉 부근
+                        LatLng l = new LatLng(36.381394, 127.371068); // ETRI부근
+
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(l, 15));
                     }
                 });
                 break;
         }
-    }
-
-    private void showLocation(Location location) {
-        this.mapFragment.getMapAsync((googleMap) -> {
-            LatLng l = new LatLng(location.getLatitude(), location.getLongitude());
-            if (mMarker != null) {
-                mMarker.remove();
-            }
-            mMarker = googleMap.addMarker(new MarkerOptions().position(l).title("Current Position"));
-        });
     }
 
     @SuppressLint("MissingPermission")
@@ -223,9 +243,17 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     public void onLocationChanged(Location location) {
         if (mOrigin == null)
             Snackbar.make(getCurrentFocus(), "Location Detected!", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-        mOrigin = new LatLng(location.getLatitude(), location.getLongitude());
-        Log.i(TAG, "changed " + location.getAccuracy() + " " + location.getProvider());
-        showLocation(location);
+//        mOrigin = new LatLng(location.getLatitude(), location.getLongitude()); // 원래코드
+        mOrigin = new LatLng(36.383672, 127.366935); // 대전 실험 전용
+        this.mapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                if (mOriginMarker != null)
+                    mOriginMarker.remove();
+                mOriginMarker = mMap.addMarker(new MarkerOptions().position(mOrigin).title("Current Position"));
+            }
+        });
     }
 
     @Override
@@ -243,8 +271,8 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
         Log.i(TAG, "Disable " + provider);
     }
 
-    public static void getItem(ArrayList<Route> item, GoogleMap googleMap, Polyline p) {
-        mItemCallback.getItem(item, googleMap, p);
+    public static void receiveItem(List<RouteVO> item) {
+        mItemCallback.getItem(item);
     }
 
     public static void setItemCallback(BackGroundMapAPI.ItemListener mItemCallback) {
@@ -252,29 +280,48 @@ public class MapsActivity extends FragmentActivity implements LocationListener, 
     }
 
     @Override
-    public void getItem(List<Route> item, GoogleMap map, Polyline p) {
-        mRouteAdapter = new RouteAdapter(item,this);
-        mRecyclerView.setAdapter(mRouteAdapter);
-        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        this.p = p;
+    public void getItem(List<RouteVO> item) {
+
+        if (mDestMarker != null)
+            mDestMarker.remove();
+        if (p != null)
+            p.remove();
+
+        if (item != null) {
+            p = mMap.addPolyline(new PolylineOptions().addAll(PolyUtil.decode(item.get(0).getOverviewPolyline())));
+
+            mDest = item.get(0).getDestination();
+            mDestMarker = mMap.addMarker(new MarkerOptions().position(mDest));
+
+            mRouteAdapter = new RouteAdapter(item, this);
+            mRecyclerView.setAdapter(mRouteAdapter);
+            mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
     }
 
 
     @Override
-    public void onItemClick(Route route) {
-        Random rnd = new Random();
+    public void onItemClick(RouteVO route, RouteHolder holder) {
 
         if (p != null)
             p.remove();
-        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        p = mMap.addPolyline(new PolylineOptions().color(color).clickable(true)
-                .addAll(PolyUtil.decode(route.overview_polyline.points)));
 
-        mMap.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
-            @Override
-            public void onPolylineClick(Polyline polyline) {
-            }
-        });
+        if (!mDest.equals(route.getDestination())) {
+            mDest = route.getDestination();
+            mDestMarker.remove();
+            mDestMarker = mMap.addMarker(new MarkerOptions().position(mDest).title(route.getStringDestiation()));
+        }
+        for(RouteHolder routeHolder : RouteAdapter.mRouteHolder) {
+            if(routeHolder.equals(holder))
+                holder.infoView.setTypeface(null, Typeface.BOLD);
+//                holder.infoView.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+            else
+                routeHolder.infoView.setTypeface(null, Typeface.NORMAL);
+        }
+
+        p = mMap.addPolyline(new PolylineOptions().color(Color.BLACK).clickable(true)
+                .addAll(PolyUtil.decode(route.getOverviewPolyline())));
+
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 }

@@ -14,4 +14,8 @@ public class ATSCData {
 
         return result;
     }
+
+    public Shelter[] getShelter() {
+        return shelter;
+    }
 }

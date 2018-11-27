@@ -1,26 +1,26 @@
 {
   "shelter": [
     {
-      "name": "공릉역",
+      "name": "유성터미널",
       "position": {
-        "lat": 37.625786,
-        "lng": 127.072893
+        "lat": 36.355595,
+        "lng": 127.334716
       },
       "description": "reserved"
     },
     {
-      "name": "하계역",
+      "name": "정보통신연구진흥센터",
       "position": {
-        "lat": 37.635950,
-        "lng": 127.068206
+        "lat": 36.406393,
+        "lng": 127.383807
       },
       "description": "reserved"
     },
     {
-      "name": "태릉입구역",
+      "name": "충남대학교",
       "position": {
-        "lat": 37.618327,
-        "lng": 127.075381
+        "lat": 36.370039,
+        "lng": 127.345944
       },
       "description": "reserved"
     }

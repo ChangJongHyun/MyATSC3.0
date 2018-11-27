@@ -1,6 +1,7 @@
 package com.btl.hcj.myapplication.BottomSheet;
 
 import android.annotation.SuppressLint;
+import android.provider.FontsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,71 +15,59 @@ import com.btl.hcj.myapplication.R;
 import com.btl.hcj.myapplication.data.Direction.Route;
 import com.google.android.gms.maps.GoogleMap;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
-public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.RouteHolder> {
+public class RouteAdapter extends RecyclerView.Adapter<RouteHolder> {
 
-    private List<Route> mItems;
+    private List<RouteVO> mItems;
     private ItemListener mListener;
+    public static List<RouteHolder> mRouteHolder = new LinkedList<>();
 
     public RouteAdapter(List items, ItemListener listener) {
         mItems = items;
         mListener = listener;
     }
 
+    @NonNull
     @Override
     public RouteHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.route_bottom_sheet_item, parent, false);
-        return new RouteHolder(v);
+        return new RouteHolder(v, mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RouteHolder holder, int position) {
-        Route data = mItems.get(position);
-        String duration = data.getStringDuration();
-        String arrival = data.getStringArrival();
-        String departure = data.getStringDeparture();
-        String distance = data.getStringDistance();
 
-        holder.distanceView.setText(distance);
-        holder.durationView.setText(duration);
-        holder.arrivalView.setText(arrival);
-        holder.departureView.setText(departure);
-        holder.route = data;
+        RouteVO data = mItems.get(position);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(data.getStringDestiation());
+        sb.append("  ");
+        sb.append(data.getDistance());
+        sb.append("  ");
+        sb.append(data.getStringDuration());
+        sb.append(" 소요");
+
+        holder.infoView.setText(sb.toString());
+        holder.setData(data);
+        mRouteHolder.add(holder);
     }
 
+    @Override
+    public void onViewRecycled(@NonNull RouteHolder holder) {
+        super.onViewRecycled(holder);
+        mRouteHolder.remove(holder);
+    }
 
     @Override
     public int getItemCount() {
         return mItems.size();
     }
 
-    class RouteHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView durationView;
-        TextView distanceView;
-        TextView arrivalView;
-        TextView departureView;
-        ImageView imageView;
-        Route route;
-
-        RouteHolder(View root) {
-            super(root);
-            distanceView = root.findViewById(R.id.distance);
-            arrivalView = root.findViewById(R.id.arrival);
-            departureView = root.findViewById(R.id.departure);
-            durationView = root.findViewById(R.id.duration);
-            imageView = root.findViewById(R.id.image_icon);
-            root.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mListener != null) {
-                mListener.onItemClick(route);
-            }
-        }
-    }
     public interface ItemListener {
-        void onItemClick(Route route);
+        void onItemClick(RouteVO route, RouteHolder holder);
     }
 }

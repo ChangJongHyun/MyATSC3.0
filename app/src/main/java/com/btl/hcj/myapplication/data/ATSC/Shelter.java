@@ -10,4 +10,10 @@ public class Shelter {
     public LatLng getLatLng() {
         return new LatLng(position.lat, position.lng);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Shelter tmp = (Shelter) obj;
+        return this.name.equals(tmp.name);
+    }
 }
